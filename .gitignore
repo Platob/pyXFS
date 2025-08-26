@@ -62,3 +62,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# .venv and .idea folders
+.venv/
+.idea/
