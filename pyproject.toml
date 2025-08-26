@@ -1,0 +1,47 @@
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyxfs"
+version = "0.1.0"
+description = "Universal filesystem interface with pluggable backends (local, S3, SFTP, ...)."
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+  { name = "Nicolas FILLOT", email = "nfillot.pro@gmail.com" }
+]
+keywords = ["filesystem", "storage", "s3", "sftp", "io", "abstraction"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: System :: Filesystems",
+]
+
+dependencies = []
+
+[project.optional-dependencies]
+s3 = ["boto3>=1.20"]
+sftp = ["paramiko>=2.10"]
+
+[project.urls]
+Homepage = "https://github.com/Platob/pyXFS"
+Repository = "https://github.com/Platob/pyXFS"
+Issues = "https://github.com/Platob/pyXFS/issues"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["pyxfs*"]
