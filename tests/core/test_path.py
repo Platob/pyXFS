@@ -113,6 +113,7 @@ class TestPath(unittest.TestCase):
         try:
             abs_path = "/tmp/folder/file.txt"
             p = Path.from_uri(abs_path)
+            print(p)
             self.assertIsInstance(p, LocalPath)
             self.assertEqual(p.scheme, "os")
             self.assertEqual(p.authority, "C:")
