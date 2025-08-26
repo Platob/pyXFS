@@ -1,38 +1,74 @@
+# pyxfs Path Utilities
 
-# pyxfs — a universal filesystem interface
+[![PyPI version](https://badge.fury.io/py/pyxfs.svg)](https://pypi.org/project/pyxfs/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-`pyxfs` provides a simple, Pythonic abstraction over multiple storage backends
-(local disk, S3, SFTP, and more). Start with the same API everywhere; plug in
-additional backends via extras.
+`pyxfs` is a Python library that provides a **URI-aware path abstraction** similar to `pathlib`, but designed for distributed and cloud storage systems.
+
+It supports **Hadoop-style** path components `(scheme, authority, path)` and provides concrete path classes for:
+- **Local files** (`LocalPath`, scheme: `os://`)
+- **S3 paths** (`S3Path`, scheme: `s3://` — in `pyxfs.s3.path`)
+
+It normalizes paths to POSIX style (`/` separators), works with URIs, and provides high-level path manipulation utilities.
+
+---
+
+## Features
+
+- Parse local and S3 URIs (`os:///tmp/file`, `s3://bucket/path/file`).
+- Normalize paths (`/a/b/../c` → `/a/c`).
+- Join, split, and modify paths without losing scheme/authority.
+- Build paths from **absolute paths** or **URIs**.
+- Generate safe URIs with percent-encoding for spaces and special characters.
+
+---
 
 ## Installation
 
+Install directly from PyPI:
+
 ```bash
-pip install pyxfs          # core (local only)
-pip install "pyxfs[s3]"    # add S3 support (boto3)
-pip install "pyxfs[sftp]"  # add SFTP support (paramiko)
+pip install pyxfs
 ```
 
-## Quick start
-
+## Quickstart
 ```python
-from pyxfs import open_fs
+from pyxfs.path import Path, LocalPath
 
-fs = open_fs("file:///tmp")        # local
-# fs = open_fs("s3://my-bucket")   # S3 (requires boto3)
-# fs = open_fs("sftp://user@host") # SFTP (requires paramiko)
+# Build from absolute local path
+p = Path.from_uri("/tmp/data/file.txt")
+print(p)              # os:///tmp/data/file.txt
+print(p.scheme)       # os
+print(p.parts)        # ['tmp', 'data', 'file.txt']
+print(p.name)         # file.txt
+print(p.suffix)       # .txt
 
-fs.makedirs("data", exist_ok=True)
-fs.write_text("data/hello.txt", "hi")
-print(fs.read_text("data/hello.txt"))
-print(fs.ls("data"))
+# Build from os:// URI
+p2 = Path.from_uri("os:///var/log/syslog")
+print(p2.as_uri())    # os:///var/log/syslog
+
+# Path operations
+p3 = p2 / "archive" / "old.log"
+print(p3)             # os:///var/log/archive/old.log
+
+p4 = p3.with_name("latest.log")
+print(p4)             # os:///var/log/archive/latest.log
+
+p5 = p4.with_suffix(".gz")
+print(p5)             # os:///var/log/archive/latest.gz
+
+print(p5.parent)      # os:///var/log/archive
 ```
 
-## Philosophy
-- Minimal core, small surface area
-- Batteries-included local backend
-- Optional, cleanly isolated cloud/remote backends
-- Type hints and friendly errors
+### S3 Path Example
+```python
+from pyxfs.path import Path
 
-## License
-MIT
+p = Path.from_uri("s3://my-bucket/data/file.csv")
+print(p.scheme)     # s3
+print(p.authority)  # my-bucket
+print(p.parts)      # ['data', 'file.csv']
+print(p.name)       # file.csv
+print(p.as_uri())   # s3://my-bucket/data/file.csv
+print(p.with_suffix(".json"))  # s3://my-bucket/data/file.json
+```
