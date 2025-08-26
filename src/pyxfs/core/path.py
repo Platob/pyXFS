@@ -66,7 +66,7 @@ class Path(abc.ABC):
             # Default to local filesystem
             absolute_path = os.path.abspath(uri)
 
-            return cls.from_uri_parts(
+            return LocalPath.from_uri_parts(
                 scheme = LOCAL_FILE_SCHEME,
                 netloc = "",
                 path = absolute_path
