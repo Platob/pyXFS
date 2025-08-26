@@ -106,14 +106,10 @@ class TestPath(unittest.TestCase):
         self.assertEqual(back, p)
 
     def test_from_absolute_posix_path(self):
-        import os as os_module
-        orig_name = os_module.name
-        os_module.name = "nt"
 
         try:
             abs_path = "/tmp/folder/file.txt"
-            p = Path.from_uri(abs_path)
-            print(p)
+            p = LocalPath.from_uri(abs_path)
             self.assertIsInstance(p, LocalPath)
             self.assertEqual(p.scheme, "os")
             self.assertEqual(p.authority, "C:")
@@ -138,20 +134,14 @@ class TestPath(unittest.TestCase):
         self.assertEqual(p.path, "/a/c/d")
 
     def test_windows_path_backslash_conversion(self):
-        import os as os_module
-        orig_name = os_module.name
-        os_module.name = "nt"
-        try:
-            p = LocalPath.from_uri_parts(
-                scheme="os",
-                netloc="",
-                path="C:\\folder\\sub\\file.txt"
-            )
-            self.assertEqual(p.authority, "C:")
-            self.assertIn("/", p.path)
-            self.assertNotIn("\\", p.path)
-        finally:
-            os_module.name = orig_name
+        p = LocalPath.from_uri_parts(
+            scheme="os",
+            netloc="",
+            path="C:\\folder\\sub\\file.txt"
+        )
+        self.assertEqual(p.authority, "C:")
+        self.assertIn("/", p.path)
+        self.assertNotIn("\\", p.path)
 
 
 if __name__ == "__main__":

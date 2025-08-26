@@ -286,9 +286,8 @@ class LocalPath(Path):
     ) -> Self:
         if not path:
             path = "/"
-
-        # Normalize to POSIX style
-        if os.name == "nt":
+        else:
+            # Normalize to POSIX style
             path = path.replace("\\", "/")
 
             # Find if starts with drive letter (e.g. C:/...) and set as authority
@@ -305,7 +304,6 @@ class LocalPath(Path):
             query=query,
             fragment=fragment
         )
-
 
 # ---- helpers ----
 
