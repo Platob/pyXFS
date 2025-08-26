@@ -1,3 +1,4 @@
+import os
 import unittest
 
 from pyxfs.core.path import Path, LocalPath
@@ -106,16 +107,17 @@ class TestPath(unittest.TestCase):
         self.assertEqual(back, p)
 
     def test_from_absolute_posix_path(self):
+        abs_path = "/abc/folder/file.txt"
+        p = LocalPath.from_uri(abs_path)
+        self.assertIsInstance(p, LocalPath)
+        self.assertEqual(p.scheme, "os")
 
-        try:
-            abs_path = "/tmp/folder/file.txt"
-            p = LocalPath.from_uri(abs_path)
-            self.assertIsInstance(p, LocalPath)
-            self.assertEqual(p.scheme, "os")
+        if os.name == "nt":
             self.assertEqual(p.authority, "C:")
-            self.assertEqual(p.path, abs_path)
-        finally:
-            os_module.name = orig_name
+        else:
+            self.assertEqual(p.authority, "")
+
+        self.assertEqual(p.path, abs_path)
 
     def test_from_uri_os_scheme(self):
         uri = "os:///var/data/file.bin"
