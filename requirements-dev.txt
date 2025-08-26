@@ -1,0 +1,11 @@
+# Core test requirements
+pytest>=8.0.0
+pytest-cov>=5.0.0
+
+# Optional backend deps for local testing
+boto3>=1.20.0
+paramiko>=2.10.0
+
+# Packaging / publishing tools
+build>=1.2.1
+twine>=5.0.0
