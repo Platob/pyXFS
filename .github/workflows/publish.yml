@@ -33,8 +33,9 @@ jobs:
         run: |
           python -m twine check dist/*
 
-      # Publish to PyPI using Trusted Publishers (no API token needed)
+      # Publish to PyPI using an API token
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
           attestations: true
