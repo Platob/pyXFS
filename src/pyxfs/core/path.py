@@ -5,7 +5,7 @@ import abc
 import os.path
 import posixpath
 from dataclasses import dataclass
-from typing import Self, List, Any, Optional
+from typing import List, Any, Optional
 from urllib.parse import urlsplit, quote, SplitResult, unquote
 
 __all__ = [
@@ -16,6 +16,11 @@ __all__ = [
 LOCAL_FILE_SCHEME = "os"
 LOCAL_FILESYSTEM_START = "os://"
 S3_FILESYSTEM_START = "s3://"
+
+try:
+    from typing import Self
+except ImportError:
+    from typing_extensions import Self
 
 
 @dataclass(frozen=True)
